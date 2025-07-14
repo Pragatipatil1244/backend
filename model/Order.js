@@ -4,21 +4,21 @@ const OrderSchema=new mongoose.Schema({
     userId:
     {
       type:mongoose.Schema.Types.ObjectId,
-      require:true,
+      required:true,
       ref:"User"
     },
      items:
       [
         {
           productId:{type:mongoose.Schema.Types.ObjectId},
-          require:true,
+          required:true,
           ref:"product",
-          quantity:{type:Number,require:true,default:1},
-          price:{type:Number,require:true},
+          quantity:{type:Number,required:true,default:1},
+          price:{type:Number,required:true},
         }
       ],
-      totalAmount:{type:Number,require:true},
-      address:{type:String,require:true},
+      totalAmount:{type:Number,required:true},
+      address:{type:String,required:true},
       payment:{type:string},
       status:{
         type:String,

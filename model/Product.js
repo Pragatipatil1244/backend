@@ -1,13 +1,13 @@
 const mongoose=require("mongoose");
 
 const productSchema = new mongoose.Schema({
-    name:{type:String,require:true},
-    category:{type:String,require:true},
-    description:{type:String,require:true},
-    price:{type:Number,require:true},
-    quantity:{type:Number,require:true},
+    name:{type:String,required:true},
+    category:{type:String,required:true},
+    description:{type:String,required:true},
+    price:{type:Number,required:true},
+    quantity:{type:Number,required:true},
     rating:{type:Number},
-    imageUrl:{type:String,require:true}
+    imageUrl:{type:String,required:true}
 },{
     timestamps:true
 })

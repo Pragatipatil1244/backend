@@ -2,11 +2,11 @@ const mongoose=require("mongoose");
 
 const tokenSchema=new mongoose.Schema({
     userId:{type:mongoose.Schema.Types.ObjectId(ObjectId),
-             require:true,
+             required:true,
             ref:"User"
         },
         tokenId:{
-            type:String,require:true
+            type:String,required:true
         }
             
 },{
