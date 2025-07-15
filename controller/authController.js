@@ -23,7 +23,7 @@ exports.login=async (req,res,next) => {
     const jwtToken=await jwt.sign({...data},process.env.JWT_SECRETKEY,{
         expiresIn:process.env.JWT_EXPRESIN});
 
-    res.cookie("jwtToken",jwtToken,{
+    res.cookie("jwt",jwtToken,{
             httpOnly:true,
             secure:process.env.NODE_ENV==="production",
             maxAge:(Number)(process.env.COOKIE_AGE)

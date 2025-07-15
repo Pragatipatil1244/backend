@@ -16,11 +16,11 @@ server.use(express.json());
 server.use(cookieParser());
 
 server.use("/api",routes);
-// server.use((req,res,next) =>{
-//     const error=new Error("undefined route error");
-//     error.statusCode=400;
-//      throw next(error)
-// })
+server.use((req,res,next) =>{
+const error=new Error("undefined route error");
+error.statusCode=400;
+throw next(error)
+})
 server.use(errorHandler)
 server.listen(5000,()=>{
     console.log("server connected")

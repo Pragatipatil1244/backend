@@ -14,6 +14,6 @@ review:{type:String}
 },{
      timestamps:true
   })
-const OrderModel=mongoose.model("rating",ratingSchema);
+const OrderModel=mongoose.model("Rating",ratingSchema);
 
 module.exports=OrderModel;

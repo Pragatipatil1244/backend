@@ -1,26 +1,28 @@
-const cartModel = require("../model/Cart");
-const cart = require("../model/Cart");
+const CartModel = require("../model/Cart");
+const Cart = require("../model/Cart");
 
 exports.addToCart = async (req, res, next) => {
 const{productId, quantity,userId} = req.body;
 
     try{
-let cart=await cartModel.findOne({userId});
+
+cart = await CartModel.create({ userId, items: [] }); 
 if(!cart){
-    await cartModel.create({userId,items:[]})
+    cart=await cartModel.create({userId,items:[]})
 }
-cart.items.find((item) => item.prodectId.toString()===productId);
+const existingCart=cart.items.find((item) => item.productId.toString()===productId)
 if(existingCart){
-    existingCart.quantity += quantity;
+    existingCart.quantity+=quantity;
 }
 else{
-    cart.items.push({prodectId, quantity});
+    cart.items.push({productId, quantity});
 }
-await cart.save
+await cart.save();
 res.status(200).json({message:"cart added"});
     }catch(error){
         next(error)
     }
+    
 }
 exports.removeCartProduct = async (req, res, next) => {
     const {productId, userId} = req.body;
@@ -43,36 +45,43 @@ exports.removeCartProduct = async (req, res, next) => {
     }
 };
 
-exports.viewcart = async (req, res, next) => {
-    const {userId} = req.body;
-    try{
-const cart = await cartModel.findOne({userId}).populate("items.productId", "name price description quantity imageUrl");
-if(!cart){
-    return res.status(200).json({message:"cart is empty",items:[]});
-    }
-    res.status(200).json({cart});
-}catch(error){
-        next(error);
-    }
+exports.viewCart = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const cart = await CartModel.findOne({ userId }).populate(
+      "items.productId",
+      "name price imageUrl"
+    );
+    if (!cart) return res.status(200).json({ items: [] }); // return empty if no cart
+
+    res.status(200).json(cart);
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.updateCartItem = async (req, res, next) => {
-    const {userId,productId, quantity, } = req.body;
+exports.updateCartItemQty = async (req, res, next) => {
+  try {
+    const { productId, quantity } = req.body;
+    const userId = req.user.id;
+ console.log(userId)
+  const cart = await CartModel.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+    console.log(productId)
+    console.log(cart.items[0].productId)
 
-    try{
-        const cart = await cartModel.findOne({userId});
-        if(!cart){
-            const error = new Error(" cart is empty");
-            error.statusCode = 400;
-            throw error;
-        }
-        const neededItem = cart.items.find((item) => item.productId.toString() === productId)
-        neededItem.quantity = quantity;
-        await cart.save();
-        res.status(200).json({message:"updated"});
-       
-    
-    } catch(error) {
-        next(error);
-    }
+    const item = cart.items.find(
+      (item) => item.productId.toString() === productId
+    );
+    if (!item) return res.status(404).json({ message: "Product not in cart" });
+
+    item.quantity = quantity;
+    cart.updatedAt = Date.now();
+    await cart.save();
+
+    res.status(200).json({ message: "Quantity updated", cart });
+  } catch (err) {
+    next(err);
+  }
 };

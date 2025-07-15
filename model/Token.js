@@ -12,6 +12,6 @@ const tokenSchema=new mongoose.Schema({
 },{
  timestamps:true
   })
-const tokenModel=mongoose.model("token",tokenSchema);
+const tokenModel=mongoose.model("Token",tokenSchema);
 
 module.exports=tokenModel;
