@@ -4,9 +4,16 @@ const dotenv=require("dotenv");
 const cookieParser=require("cookie-parser");
 const { errorHandler } = require("./Middleware/errorHandaler");
 const routes=require("./routes");
-
+const cors=require("cors");
 dotenv.config();
 const server=express();
+server.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
 mongoose.connect(process.env.MONGODB_URL)
 .then(()=>{console.log("DB connected")})

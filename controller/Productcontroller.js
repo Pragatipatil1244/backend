@@ -1,5 +1,5 @@
 const productModel = require("../model/Product");
-const { findByIdAndDelete } = require("../model/user")
+const Rating= require("../model/Rating");
 
 exports.createProduct=async(req,res,next)=>{
 const {name,category,description,price,quantity,imageurl}=req.body
@@ -17,7 +17,7 @@ const {name,category,description,price,quantity,imageurl}=req.body
 exports.getAllProducts=async (req,res,next) => {
     try{
       const product=await productModel.find();
-  res.status(200).json({product})
+  res.status(200).json(product)
     }catch(error){
         next(error)
     }
@@ -33,8 +33,21 @@ const product=await productModel.findById(id);
 const error=new Error("Product does not exists");
 error.ststusCode=400;
 throw error
+const ratings=await Rating.find({id})
     }
-res.status(200).json(product)
+ let averageRating = 0;
+    if (ratings.length > 0) {
+      const sum = ratings.reduce((total, rating) => total + rating.rating, 0);
+      averageRating = sum / ratings.length;
+    }
+    const response = {
+      ...product.toObject(),
+      averageRating: parseFloat(averageRating.toFixed(1)),
+      totalRatings: ratings.length,
+      outOf5: 5,
+    };
+
+    res.json(response);
     }catch(error){
         next(error)
     }

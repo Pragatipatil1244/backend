@@ -19,7 +19,7 @@ exports.login=async (req,res,next) => {
         throw error;
       
     }
-    const data={ide:user._id,role:user.role,email:user.email,};
+    const data={id:user._id,role:user.role,email:user.email,};
     const jwtToken=await jwt.sign({...data},process.env.JWT_SECRETKEY,{
         expiresIn:process.env.JWT_EXPRESIN});
 

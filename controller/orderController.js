@@ -71,7 +71,7 @@ exports.updateOrderStatus = async (req, res, next) => {
   try {
     const { orderId, status } = req.body;
 
-    if (!["pending", "paid", "failed"].includes(status)) {
+    if (!["pending", "paid", "failed","delivered"].includes(status)) {
       return res.status(400).json({ message: "Invalid status value" });
     }
 
